@@ -43,8 +43,6 @@
             <div class="apikey-body">
               <label for="pageSpeedApiKey">PageSpeed Insights API key</label>
               <input id="pageSpeedApiKey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your restricted Google API key">
-              <p>Needed if Google's shared no-key quota is exhausted. The key stays in this page only and is not saved. Restrict it to the PageSpeed Insights API and this site's HTTP referrer before using it.</p>
-              <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer">Manage API keys in Google Cloud</a>
             </div>
           </details>
           <div id="urlStatus" class="urlstatus" role="status" aria-live="polite"></div>
@@ -344,7 +342,7 @@ function renderPageSpeed(data,url){
   $('liveVitals').innerHTML=vitals.map(([label,id])=>{const a=getAudit(lr,id);return `<div class="livevital"><span>${esc(label)}</span><strong>${esc(a?.displayValue||'N/A')}</strong></div>`;}).join('');
   const audits=Object.values(lr.audits||{}).filter(a=>a&&typeof a.score==='number'&&a.score<.9&&a.score>=0&&!['notApplicable','manual'].includes(a.scoreDisplayMode)&&a.title&&a.id!=='uses-rel-preload').sort((a,b)=>a.score-b.score);
   const selected=audits.slice(0,8);
-  $('liveFindings').innerHTML=selected.length?selected.map(a=>`<article class="livefinding"><strong>${esc(a.title)} <span style="color:var(--muted);font-weight:650">(${Math.round(a.score*100)}/100)</span></strong><p>${esc((a.description||'Review this Lighthouse finding.').replace(/\s+/g,' ').slice(0,540))}${a.displayValue?' · '+esc(a.displayValue):''}</p></article>`).join(''):'<div class="empty">No scored Lighthouse audits below 90/100 were returned, or the report contains only manual checks.</div>';
+  $('liveFindings').innerHTML=selected.length?selected.map(a=>`<article class="livefinding"><strong>${esc(a.title)} <span style="color:var(--muted);font-weight:650">(${Math.round(a.score*100)}/100)</span></strong></article>`).join(''):'<div class="empty">No scored Lighthouse audits below 90/100 were returned, or the report contains only manual checks.</div>';
   $('liveMeta').textContent='Google Lighthouse mobile lab report for '+url+' · '+(lr.fetchTime?new Date(lr.fetchTime).toLocaleString():'completed just now');
   $('liveTag').textContent='Lighthouse mobile';$('openPageSpeedBtn').disabled=false;$('openTargetBtn').disabled=false;
   $('openPageSpeedBtn').onclick=()=>window.open('https://pagespeed.web.dev/analysis?url='+encodeURIComponent(url),'_blank','noopener');
