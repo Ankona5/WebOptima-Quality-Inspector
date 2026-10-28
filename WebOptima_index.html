@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Audit a public website with mobile Lighthouse metrics and clear, actionable website quality checks.">
+<title>WebOptima Quality Inspector</title>
+<style>
+:root{--bg:#f3f6f8;--surface:#fff;--ink:#142537;--muted:#66788a;--line:#dbe4eb;--blue:#2356d8;--blue2:#eaf0ff;--teal:#007f73;--teal2:#e0f5f1;--red:#bd3434;--red2:#fff0f0;--amber:#a96600;--amber2:#fff5df;--green:#18784f;--green2:#e6f7ee;--shadow:0 10px 28px rgba(31,54,78,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #9cb6ff;outline-offset:2px}.wrap{max-width:1380px;margin:0 auto;padding:0 24px 42px} .topbar{display:flex;align-items:center;justify-content:center;padding:23px 0 20px;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;justify-content:center;width:100%;text-align:center}.brandname{font-size:20px;font-weight:850;letter-spacing:-.45px}.brandname span{color:var(--blue)}.hero{display:flex;justify-content:center;align-items:center;padding:34px 0 28px;text-align:center}.hero-intro{max-width:760px;margin:0 auto}.hero h1{font-size:35px;line-height:1.12;letter-spacing:-1.2px;margin:0 0 13px}.hero .what-title{font-size:13px;letter-spacing:.1px;margin:0 0 5px;font-weight:800;color:var(--ink)}.hero p{color:var(--muted);max-width:700px;margin:0 auto;font-size:13px;line-height:1.7}.grid{display:grid;grid-template-columns:minmax(330px,.88fr) minmax(0,1.55fr);gap:18px;align-items:start}.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:18px}.panelhead{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.panelhead h2{font-size:14px;margin:0;font-weight:850;letter-spacing:-.2px}.panelhead p{margin:4px 0 0;color:var(--muted);font-size:11px}.step{height:25px;min-width:25px;display:grid;place-items:center;border-radius:8px;background:var(--blue2);color:var(--blue);font-size:11px;font-weight:900}.panelbody{padding:17px 18px}.fieldnote{font-size:11px;color:var(--muted);margin:8px 0 0;line-height:1.5}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}.btn{border:1px solid var(--line);background:#fff;color:var(--ink);padding:9px 12px;border-radius:9px;font-size:11px;font-weight:800;transition:transform .15s,box-shadow .15s}.btn:hover{box-shadow:0 4px 12px #21375114;transform:translateY(-1px)}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.teal{background:var(--teal);color:#fff;border-color:var(--teal)}.btn.subtle{background:#f8fafc}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}.inputrow{display:flex;gap:8px;align-items:center}.inputrow .btn{flex:1}.smalltag{display:inline-flex;align-items:center;padding:4px 7px;border-radius:6px;font-size:10px;font-weight:800;background:#f0f4f8;color:#536576}.rightcol{min-width:0}.resultshead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.resultshead .smalltag{background:var(--teal2);color:var(--teal)}.metrics{display:grid;grid-template-columns:1.15fr repeat(3,1fr);gap:10px;padding:15px}.metric{border:1px solid var(--line);border-radius:12px;padding:13px;min-width:0}.metric.featured{background:linear-gradient(150deg,#eff4ff,#fff);border-color:#c8d6ff}.metric .m-label{color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px}.metric .m-value{font-size:29px;font-weight:900;letter-spacing:-1px;margin:7px 0 2px;line-height:1}.metric .m-sub{color:var(--muted);font-size:10px}.scoretrack{height:5px;background:#dce5f0;border-radius:9px;overflow:hidden;margin-top:11px}.scoretrack span{display:block;height:100%;border-radius:9px;background:var(--blue);width:0;transition:width .35s}.metric.count .m-value{font-size:26px}.metric.high .m-value{color:var(--red)}.metric.med .m-value{color:var(--amber)}.metric.pass .m-value{color:var(--green)}.tabs{display:flex;gap:4px;padding:0 15px;border-bottom:1px solid var(--line);overflow:auto}.tab{border:0;background:transparent;color:var(--muted);padding:11px 12px;font-size:11px;font-weight:850;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-1px}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.pane{padding:16px 17px}.summaryline{font-size:12px;color:var(--muted);margin:0 0 13px}.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.filter{border:1px solid var(--line);background:white;color:var(--muted);border-radius:99px;padding:6px 10px;font-size:10px;font-weight:800}.filter.active{background:var(--blue2);border-color:#bdccff;color:var(--blue)}.issues{display:grid;gap:9px}.issue{border:1px solid var(--line);border-radius:11px;padding:12px 13px;display:grid;grid-template-columns:29px minmax(0,1fr) auto;gap:10px;align-items:start}.issueicon{width:29px;height:29px;display:grid;place-items:center;border-radius:9px;background:#f3f6fa;font-size:14px;font-weight:900}.issue.high .issueicon{background:var(--red2);color:var(--red)}.issue.medium .issueicon{background:var(--amber2);color:var(--amber)}.issue.low .issueicon{background:var(--blue2);color:var(--blue)}.issue h3{font-size:12px;margin:0 0 4px;font-weight:850}.issue p{font-size:11px;color:var(--muted);margin:0 0 5px}.suggestion{font-size:10px;color:#344c64;background:#f5f8fb;border-radius:6px;padding:7px 9px;margin-top:8px}.severity{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;border-radius:6px;padding:5px 7px;white-space:nowrap}.severity.high{background:var(--red2);color:var(--red)}.severity.medium{background:var(--amber2);color:var(--amber)}.severity.low{background:var(--blue2);color:var(--blue)}.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}.hidden{display:none!important}.fix-intro{background:var(--teal2);border:1px solid #bee7dc;border-radius:11px;padding:12px 13px;color:#18574e;font-size:11px;margin-bottom:13px}.fix-intro strong{font-size:12px;display:block;margin-bottom:3px}.fixes{display:grid;gap:9px}.fixrow{display:flex;align-items:start;gap:10px;padding:11px;border:1px solid var(--line);border-radius:10px;background:#fbfcfd}.fixrow input{margin-top:3px;accent-color:var(--teal);width:15px;height:15px}.fixrow strong{display:block;font-size:11px}.fixrow p{font-size:10px;color:var(--muted);margin:3px 0 0}.fixrow .manual{margin-left:auto;background:var(--amber2);color:var(--amber);font-size:9px;font-weight:850;padding:4px 6px;border-radius:6px;white-space:nowrap}.afterstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:13px 0}.afterstat{border:1px solid var(--line);border-radius:10px;padding:11px}.afterstat span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;font-weight:850;letter-spacing:.5px}.afterstat strong{font-size:20px;display:block;margin-top:5px;letter-spacing:-.5px}.afterstat .good{color:var(--green)}.previewgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.preview{border:1px solid var(--line);border-radius:10px;overflow:hidden;min-width:0}.previewhead{padding:9px 11px;background:#f6f8fb;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}.previewhead strong{font-size:10px}.preview pre{margin:0;padding:11px;height:230px;overflow:auto;white-space:pre-wrap;word-break:break-word;background:#0f1c2c;color:#dce8f5;font:10px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}.note{border:1px solid var(--line);background:#f8fafc;border-radius:9px;padding:10px 12px;color:var(--muted);font-size:10px;line-height:1.55;margin-top:12px}.findingtable{width:100%;border-collapse:collapse;font-size:11px}.findingtable th,.findingtable td{text-align:left;border-bottom:1px solid var(--line);padding:9px 7px;vertical-align:top}.findingtable th{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.5px}.findingtable tr:last-child td{border-bottom:0}.pill{display:inline-block;padding:3px 7px;border-radius:6px;font-size:9px;font-weight:850}.pill.pass{background:var(--green2);color:var(--green)}.pill.fail{background:var(--red2);color:var(--red)}.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--muted);font-size:10px;padding:14px 0 0}.foot strong{color:var(--ink)}.toast{position:fixed;bottom:20px;right:20px;z-index:10;background:#142537;color:white;padding:12px 15px;border-radius:10px;box-shadow:0 10px 30px #14253735;font-size:12px;font-weight:750;max-width:360px}.toast.hidden{display:none}
+
+.urlrow{display:flex;gap:8px;align-items:stretch}.urlrow input{flex:1;min-width:0;border:1px solid #cbd7e1;border-radius:9px;padding:12px 13px;background:#fff;color:var(--ink)}.urlrow .btn{white-space:nowrap}.urlstatus{display:none;margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font-size:11px;color:var(--muted);background:#f8fafc}.urlstatus.show{display:block}.urlstatus.error{background:var(--red2);border-color:#f2cccc;color:var(--red)}.urlstatus.ok{background:var(--green2);border-color:#c4e8d5;color:var(--green)}.livescores{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}.livescore{border:1px solid var(--line);border-radius:11px;padding:12px;min-width:0}.livescore label{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:850;font-size:9px}.livescore strong{font-size:26px;line-height:1.2;display:block;margin-top:6px;letter-spacing:-.7px}.livescore small{font-size:10px;color:var(--muted)}.livescore.good strong{color:var(--green)}.livescore.warn strong{color:var(--amber)}.livescore.bad strong{color:var(--red)}.livevitals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.livevital{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:10px}.livevital span{display:block;font-size:9px;color:var(--muted);font-weight:850;text-transform:uppercase;letter-spacing:.4px}.livevital strong{display:block;font-size:14px;margin-top:5px;overflow-wrap:anywhere}.livefindings{display:grid;gap:8px;margin-top:10px}.livefinding{border:1px solid var(--line);padding:10px 12px;border-radius:9px}.livefinding strong{font-size:11px;display:block}.livefinding p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.55}.urlscanbutton{margin-top:11px}.urlscanbutton:disabled{opacity:.55}.livefoot{color:var(--muted);font-size:10px;margin-top:10px;line-height:1.5}
+@media(max-width:1000px){.grid{grid-template-columns:1fr}.sourcearea{height:290px}.hero{align-items:start;flex-direction:column}.hero-intro{text-align:center;max-width:760px}.metrics{grid-template-columns:repeat(4,1fr)}.metric.featured{grid-column:span 4}.metric .m-value{font-size:24px}.metric.featured .m-value{font-size:32px}}
+@media(max-width:590px){.wrap{padding:0 12px 28px}.topbar{padding-top:15px}.statuspill{display:none}.hero h1{font-size:28px}.metrics{grid-template-columns:repeat(2,1fr)}.metric.featured{grid-column:span 2}.previewgrid{grid-template-columns:1fr}.afterstats{grid-template-columns:repeat(2,1fr)}.issue{grid-template-columns:25px minmax(0,1fr)}.issue .severity{grid-column:2;justify-self:start}.panelbody,.pane{padding:12px}.panelhead{padding:14px}.foot{flex-direction:column;align-items:start}}
+@media print{body{background:white}.wrap{max-width:none;padding:0}.topbar{padding-top:0}.grid{grid-template-columns:1fr}.sourcepanel,.actions,.tabs,.filters,.fixactions,.foot,.hero-side{display:none!important}.panel{box-shadow:none;break-inside:avoid}.pane{display:block!important}.pane.hidden{display:block!important}.sourcearea{height:120px}.preview pre{height:auto;max-height:none}.rightcol{display:block}.panel{margin-bottom:10px}}
+
+@media(max-width:640px){.wrap{padding-left:12px;padding-right:12px}.urlrow{flex-direction:column}.urlrow .btn{width:100%}.livescores{grid-template-columns:repeat(2,minmax(0,1fr))}.livevitals{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{font-size:28px}.metrics{padding:10px;gap:7px}.metric{padding:10px}.pane{padding:12px}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><div class="brandname">Web<span>Optima</span> Quality Inspector</div></div>
+  </header>
+  <section class="hero">
+    <div class="hero-intro">
+      <h1>Website Quality Inspector</h1>
+      <h2 class="what-title">What is it?</h2>
+      <p>Enter a public website URL to run a Mobile Lighthouse audit. Review performance, accessibility, best practices and SEO, with key findings and recommendations in one place.</p>
+    </div>
+  </section>
+  <div class="grid">
+    <div class="leftcol">
+      <section class="panel urlpanel">
+        <div class="panelhead"><div><h2>Live website URL check</h2></div></div>
+        <div class="panelbody">
+          <label for="websiteUrl" style="display:block;font-size:11px;font-weight:850;margin-bottom:7px">Public website URL</label>
+          <div class="urlrow"><input id="websiteUrl" type="url" inputmode="url" autocomplete="url" placeholder="https://example.com" aria-label="Public website URL"><button class="btn primary" id="auditUrlBtn">Audit URL</button></div>
+          <div class="actions urlscanbutton"><button class="btn subtle" id="clearUrlBtn">Clear URL</button></div>
+          <div id="urlStatus" class="urlstatus" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panelhead"><div><h2>What is checked?</h2></div></div>
+        <div class="panelbody" style="padding-top:10px;padding-bottom:10px">
+          <table class="findingtable"><thead><tr><th>Area</th><th>Examples of checks</th></tr></thead><tbody>
+            <tr><td><strong>Metadata & SEO</strong></td><td>Page title, meta description, viewport configuration, language declaration</td></tr>
+            <tr><td><strong>Structure</strong></td><td>H1 presence, heading-level jumps, duplicate IDs</td></tr>
+            <tr><td><strong>Accessibility</strong></td><td>Image alt attributes, descriptive link text, form labels, named buttons</td></tr>
+            <tr><td><strong>Security</strong></td><td>Safe rel attributes for links opened in a new tab</td></tr>
+          </tbody></table>
+
+        </div>
+      </section>
+    </div>
+    <div class="rightcol">
+      <section class="panel hidden" id="livePanel">
+        <div class="panelhead"><div class="resultshead"><div><h2>Live URL audit results</h2><p id="liveMeta">Waiting for a public URL.</p></div></div><span class="smalltag" id="liveTag">Not scanned</span></div>
+        <div class="panelbody">
+          <div id="liveScores" class="livescores"></div>
+          <div id="liveVitals" class="livevitals"></div>
+          <h3 style="font-size:12px;margin:15px 0 7px">Highest-priority Lighthouse findings</h3>
+          <div id="liveFindings" class="livefindings"><div class="empty">Enter a website URL and run the audit.</div></div>
+          <div id="liveSourceNote" class="livefoot"></div>
+          <div class="actions"><button class="btn" id="openPageSpeedBtn" disabled>Open Google report</button><button class="btn" id="openTargetBtn" disabled>Open website in new tab</button></div>
+        </div>
+      </section>
+      <section class="panel" id="reportPanel">
+        <div class="panelhead"><div class="resultshead"><div><h2>Audit results</h2><p id="auditMeta">13 rules evaluated</p></div></div><span class="smalltag" id="auditTag">Awaiting input</span></div>
+        <div class="metrics" id="metrics">
+          <div class="metric featured"><div class="m-label">Quality score</div><div class="m-value" id="score">—</div><div class="m-sub">Rule-based score out of 100</div><div class="scoretrack"><span id="scorebar"></span></div></div>
+          <div class="metric count high"><div class="m-label">High</div><div class="m-value" id="highCount">—</div><div class="m-sub">Must review</div></div>
+          <div class="metric count med"><div class="m-label">Medium</div><div class="m-value" id="medCount">—</div><div class="m-sub">Recommended</div></div>
+          <div class="metric count pass"><div class="m-label">Passed</div><div class="m-value" id="passCount">—</div><div class="m-sub">Checks satisfied</div></div>
+        </div>
+        <div class="tabs"><button class="tab active" data-tab="findings">Findings</button><button class="tab" data-tab="fixes">Fix workspace</button><button class="tab" data-tab="checks">All checks</button></div>
+        <div class="pane" id="pane-findings">
+          <p class="summaryline" id="summaryLine">Your audit findings will appear here after analysis.</p>
+          <div class="filters"><button class="filter active" data-filter="all">All issues</button><button class="filter" data-filter="high">High</button><button class="filter" data-filter="medium">Medium</button><button class="filter" data-filter="low">Low</button></div>
+          <div class="issues" id="issues"><div class="empty">Run a quality audit to view the findings.</div></div>
+          <div class="actions"><button class="btn" id="exportAuditBtn" disabled>Download audit CSV</button><button class="btn" id="reportJsonBtn" disabled>Download report JSON</button></div>
+        </div>
+        <div class="pane hidden" id="pane-fixes">
+          <div class="fix-intro"><strong>Safe-fix workspace</strong>Select suggested transformations, preview the regenerated HTML, rerun the same checks, and download the repaired file. Review content and test the result before deploying it.</div>
+          <div class="fixes" id="fixesList"><div class="empty">Run an audit first to generate applicable fixes.</div></div>
+          <div class="actions fixactions"><button class="btn teal" id="applyFixesBtn" disabled>Apply selected fixes</button><button class="btn" id="resetFixesBtn" disabled>Reset selections</button><button class="btn" id="downloadHtmlBtn" disabled>Download repaired HTML</button></div>
+          <div id="afterReport" class="hidden">
+            <div class="afterstats"><div class="afterstat"><span>Before score</span><strong id="beforeScore">—</strong></div><div class="afterstat"><span>After score</span><strong class="good" id="afterScore">—</strong></div><div class="afterstat"><span>Issues resolved</span><strong class="good" id="resolvedCount">—</strong></div><div class="afterstat"><span>Remaining</span><strong id="remainingCount">—</strong></div></div>
+            <div class="previewgrid"><div class="preview"><div class="previewhead"><strong>ORIGINAL SOURCE</strong><span class="smalltag" id="beforeTag">Before</span></div><pre id="beforePreview"></pre></div><div class="preview"><div class="previewhead"><strong>UPDATED SOURCE</strong><span class="smalltag" style="background:var(--green2);color:var(--green)">Preview</span></div><pre id="afterPreview"></pre></div></div>
+            <div class="note">Score changes are computed by rerunning the same implemented checks against the repaired markup. This is a static source-level simulation; load testing, screen-reader testing, and production validation remain necessary.</div>
+          </div>
+        </div>
+        <div class="pane hidden" id="pane-checks">
+          <p class="summaryline">Pass/fail table of all checks in the current audit. Some findings require a human review rather than an automatic correction.</p>
+          <div style="overflow:auto"><table class="findingtable"><thead><tr><th>Status</th><th>Check</th><th>Details</th></tr></thead><tbody id="allChecks"><tr><td colspan="3">Run a quality audit first.</td></tr></tbody></table></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panelhead"><div><h2>Recommended workflow</h2></div></div>
+        <div class="panelbody" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+          <div style="padding:12px;border:1px solid var(--line);border-radius:10px"><div style="color:var(--blue);font-size:10px;font-weight:900">01 · INSPECT</div><strong style="display:block;font-size:11px;margin:7px 0 4px">Detect quality gaps</strong><span style="display:block;font-size:10px;color:var(--muted)">Run a public URL audit and review quality gaps.</span></div>
+          <div style="padding:12px;border:1px solid var(--line);border-radius:10px"><div style="color:var(--teal);font-size:10px;font-weight:900">02 · IMPROVE</div><strong style="display:block;font-size:11px;margin:7px 0 4px">Review safe fixes</strong><span style="display:block;font-size:10px;color:var(--muted)">Apply selected source transformations.</span></div>
+          <div style="padding:12px;border:1px solid var(--line);border-radius:10px"><div style="color:var(--green);font-size:10px;font-weight:900">03 · VALIDATE</div><strong style="display:block;font-size:11px;margin:7px 0 4px">Compare new results</strong><span style="display:block;font-size:10px;color:var(--muted)">Rerun checks and export the output.</span></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+let currentHTML='',currentReport=null,afterHTML='',afterReport=null,activeFilter='all';
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function cleanText(s){return (s||'').replace(/\s+/g,' ').trim();}
+function notify(message){const t=$('toast');t.textContent=message;t.classList.remove('hidden');clearTimeout(notify.timer);notify.timer=setTimeout(()=>t.classList.add('hidden'),2800);}
+function addCheck(report,{key,title,category,severity='medium',pass,detail,fixKey=null,manual=false,selector='document'}){
+  report.checks.push({key,title,category,severity,pass,detail,fixKey,manual,selector});
+  if(!pass) report.issues.push({id:key+'-'+report.issues.length,key,title,category,severity,detail,fixKey,manual,selector});
+}
+function analyzeHTML(markup){
+  const parser=new DOMParser();
+  const doc=parser.parseFromString(markup,'text/html');
+  const report={title:doc.title||'',issues:[],checks:[],html:markup,wordCount:cleanText(doc.body?.textContent).split(/\s+/).filter(Boolean).length};
+  const root=doc.documentElement,head=doc.head,body=doc.body;
+  const lang=cleanText(root.getAttribute('lang'));
+  addCheck(report,{key:'lang',title:'Document language declared',category:'Metadata & SEO',severity:'high',pass:!!lang,detail:lang?'Language is set to “'+lang+'”.':'The <html> element has no lang attribute, which makes language selection less reliable for assistive technology and search systems.',fixKey:'lang'});
+  const title=cleanText(doc.querySelector('title')?.textContent);
+  addCheck(report,{key:'title',title:'Page title present',category:'Metadata & SEO',severity:'high',pass:!!title,detail:title?'A document title is present ('+title.length+' characters).':'The document title is missing or empty. Add a concise title that explains the page purpose.',fixKey:'title'});
+  const desc=cleanText(doc.querySelector('meta[name="description"]')?.getAttribute('content'));
+  const descPass=!!desc&&desc.length>=70&&desc.length<=170;
+  addCheck(report,{key:'description',title:'Meta description quality',category:'Metadata & SEO',severity:desc?'low':'medium',pass:descPass,detail:!desc?'No meta description is present.':desc.length<70?'Description is short ('+desc.length+' characters); consider a fuller, accurate summary.':desc.length>170?'Description is long ('+desc.length+' characters) and may be truncated in some search previews.':'Description length is '+desc.length+' characters.',fixKey:'description'});
+  const viewport=doc.querySelector('meta[name="viewport"]');
+  addCheck(report,{key:'viewport',title:'Responsive viewport configured',category:'Metadata & SEO',severity:'medium',pass:!!viewport&&/width\s*=\s*device-width/i.test(viewport.content||''),detail:viewport?'Viewport value: '+(viewport.content||'(empty)')+'.':'The page is missing a standard mobile viewport declaration.',fixKey:'viewport'});
+  const h1s=[...doc.querySelectorAll('h1')];
+  addCheck(report,{key:'h1',title:'Exactly one primary H1 heading',category:'Structure & readability',severity:'high',pass:h1s.length===1,detail:h1s.length===0?'No H1 heading found. Give the page a clear primary heading.':h1s.length>1?'Found '+h1s.length+' H1 headings. Review the hierarchy so the primary topic is clear.':'Exactly one H1 heading is present.',fixKey:'headings'});
+  const headings=[...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+  let prev=0,jump=null;
+  for(const h of headings){const level=Number(h.tagName[1]);if(prev===0&&level>1){jump={from:0,to:level,text:cleanText(h.textContent)};break;}if(prev&&level>prev+1){jump={from:prev,to:level,text:cleanText(h.textContent)};break;}prev=level;}
+  addCheck(report,{key:'headingHierarchy',title:'Heading levels follow a logical order',category:'Structure & readability',severity:'medium',pass:!jump,detail:!jump?'No skipped heading levels detected.':jump.from===0?'First heading is '+('H'+jump.to)+'; page structure should start with an H1.':'Heading jumps from H'+jump.from+' to H'+jump.to+' near “'+jump.text+'”.',fixKey:'headings'});
+  const imgs=[...doc.querySelectorAll('img')],missingAlt=imgs.filter(i=>!i.hasAttribute('alt'));
+  addCheck(report,{key:'imageAlt',title:'Images have an alt attribute',category:'Accessibility & usability',severity:'high',pass:missingAlt.length===0,detail:missingAlt.length?missingAlt.length+' of '+imgs.length+' images are missing an alt attribute. Review each image: describe meaningful images and use alt="" for decorative ones.':(imgs.length?imgs.length+' image(s) have an alt attribute.':'No images found; image alt check not applicable.'),fixKey:null,manual:true});
+  const anchors=[...doc.querySelectorAll('a[href]')];
+  const noName=anchors.filter(a=>!cleanText(a.textContent)&&!cleanText(a.getAttribute('aria-label'))&&!cleanText(a.getAttribute('title')));
+  addCheck(report,{key:'linkNames',title:'Links have accessible names',category:'Accessibility & usability',severity:'high',pass:noName.length===0,detail:noName.length?noName.length+' link(s) have no text or accessible name. Add descriptive link text or an aria-label.':'All inspected links have accessible names.',fixKey:null,manual:true});
+  const generic=anchors.filter(a=>/^(click here|read more|more|here|learn more)$/i.test(cleanText(a.textContent))&&!a.getAttribute('aria-label'));
+  addCheck(report,{key:'genericLinks',title:'Link text is descriptive',category:'Accessibility & usability',severity:'medium',pass:generic.length===0,detail:generic.length?generic.length+' link(s) use generic labels such as “Click here” or “Read more”. Use text that explains the destination.':'No common generic link labels detected.',fixKey:'links',manual:false});
+  const controls=[...doc.querySelectorAll('input,select,textarea')].filter(el=>!['hidden','submit','button','reset','image'].includes((el.getAttribute('type')||'').toLowerCase()));
+  const unlabeled=controls.filter(el=>{
+    const id=el.id;
+    const label=!!(id&&[...doc.querySelectorAll('label[for]')].some(l=>l.htmlFor===id))||!!el.closest('label');
+    return !label&&!cleanText(el.getAttribute('aria-label'))&&!cleanText(el.getAttribute('aria-labelledby'))&&!cleanText(el.getAttribute('title'));
+  });
+  addCheck(report,{key:'formLabels',title:'Form controls have accessible labels',category:'Accessibility & usability',severity:'high',pass:unlabeled.length===0,detail:unlabeled.length?unlabeled.length+' form control(s) lack a programmatic label. A placeholder alone is not a reliable label.':'All inspected form controls have a programmatic label.',fixKey:'formLabels'});
+  const buttons=[...doc.querySelectorAll('button')].filter(b=>!cleanText(b.textContent)&&!cleanText(b.getAttribute('aria-label'))&&!cleanText(b.getAttribute('title')));
+  addCheck(report,{key:'buttonNames',title:'Buttons have accessible names',category:'Accessibility & usability',severity:'high',pass:buttons.length===0,detail:buttons.length?buttons.length+' button(s) have no text label or accessible name.':'All buttons have accessible names.',fixKey:'buttonNames'});
+  const unsafe=[...doc.querySelectorAll('a[target="_blank"],area[target="_blank"]')].filter(a=>!/(^|\s)(noopener|noreferrer)(\s|$)/i.test(a.getAttribute('rel')||''));
+  addCheck(report,{key:'safeBlankLinks',title:'New-tab links use safe rel attributes',category:'Security & hygiene',severity:'medium',pass:unsafe.length===0,detail:unsafe.length?unsafe.length+' link(s) open new tabs without rel="noopener noreferrer".':'All links with target="_blank" have a safe rel attribute, or none are present.',fixKey:'rel'});
+  const ids=[...doc.querySelectorAll('[id]')].map(el=>el.id).filter(Boolean),dupes=[...new Set(ids.filter((id,i)=>ids.indexOf(id)!==i))];
+  addCheck(report,{key:'uniqueIds',title:'Element IDs are unique',category:'Structure & readability',severity:'medium',pass:dupes.length===0,detail:dupes.length?'Duplicate IDs found: '+dupes.join(', ')+'. Duplicate IDs can break labels, selectors and fragment links.':'No duplicate IDs detected.',fixKey:null,manual:true});
+  report.score=Math.max(0,100-report.issues.reduce((n,x)=>n+({high:7,medium:4,low:2}[x.severity]||4),0));
+  report.counts={high:report.issues.filter(x=>x.severity==='high').length,medium:report.issues.filter(x=>x.severity==='medium').length,low:report.issues.filter(x=>x.severity==='low').length,pass:report.checks.filter(x=>x.pass).length};
+  report.categories=[...new Set(report.issues.map(x=>x.category))];
+  report.sourceBytes=new Blob([markup]).size;
+  return report;
+}
+function applyTransforms(markup,selected,values){
+  const parser=new DOMParser();const doc=parser.parseFromString(markup,'text/html');
+  if(selected.lang && !cleanText(doc.documentElement.getAttribute('lang')))doc.documentElement.setAttribute('lang','en');
+  if(selected.title&&!cleanText(doc.querySelector('title')?.textContent)){
+    let t=cleanText(values.title);if(!t)t=cleanText(doc.querySelector('h1,h2,h3')?.textContent)||'Website Overview';
+    let el=doc.querySelector('title');if(!el){el=doc.createElement('title');doc.head.prepend(el);}el.textContent=t;
+  }
+  if(selected.description){
+    const existing=doc.querySelector('meta[name="description"]');
+    const oldDescription=cleanText(existing?.getAttribute('content'));
+    if(!oldDescription||oldDescription.length<70||oldDescription.length>170){
+      let d=cleanText(values.description);if(!d)d=cleanText(doc.body.textContent).slice(0,155);if(!d)d='Learn more about this website and the services it provides.';
+      let el=existing;if(!el){el=doc.createElement('meta');el.name='description';doc.head.appendChild(el);}el.content=d;
+    }
+  }
+  if(selected.viewport&&!doc.querySelector('meta[name="viewport"]')){let el=doc.createElement('meta');el.name='viewport';el.content='width=device-width, initial-scale=1';doc.head.appendChild(el);}
+  if(selected.headings){
+    const hs=[...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+    if(hs.length){
+      const h1s=hs.filter(h=>h.tagName==='H1');
+      if(h1s.length===0){const first=hs[0];const h=doc.createElement('h1');h.innerHTML=first.innerHTML;[...first.attributes].forEach(a=>h.setAttribute(a.name,a.value));first.replaceWith(h);hs[0]=h;}
+      // Use one primary H1; downgrade later H1s to H2, then close heading-level gaps.
+      let prev=1,seenH1=false;
+      const updated=[...doc.querySelectorAll('h1,h2,h3,h4,h5,h6')];
+      for(let i=0;i<updated.length;i++){
+        let el=updated[i],level=Number(el.tagName[1]);
+        if(level===1){if(!seenH1){seenH1=true;prev=1;continue;}level=2;}
+        if(level>prev+1)level=prev+1;
+        if(level!==Number(el.tagName[1])){const repl=doc.createElement('h'+level);[...el.attributes].forEach(a=>repl.setAttribute(a.name,a.value));repl.innerHTML=el.innerHTML;el.replaceWith(repl);}
+        prev=level;
+      }
+    }
+  }
+  if(selected.formLabels){
+    let idx=1;
+    for(const el of [...doc.querySelectorAll('input,select,textarea')]){
+      if(['hidden','submit','button','reset','image'].includes((el.getAttribute('type')||'').toLowerCase()))continue;
+      const id=el.id;const linked=id&&[...doc.querySelectorAll('label[for]')].some(l=>l.htmlFor===id);if(linked||el.closest('label')||cleanText(el.getAttribute('aria-label'))||cleanText(el.getAttribute('aria-labelledby'))||cleanText(el.getAttribute('title')))continue;
+      const text=cleanText(el.getAttribute('placeholder'))||cleanText(el.getAttribute('name'))||((el.getAttribute('type')||'text')+' field');
+      el.setAttribute('aria-label',text.charAt(0).toUpperCase()+text.slice(1));if(!el.id)el.id='quality-inspector-field-'+idx++;
+    }
+  }
+  if(selected.buttonNames){for(const b of [...doc.querySelectorAll('button')])if(!cleanText(b.textContent)&&!cleanText(b.getAttribute('aria-label'))&&!cleanText(b.getAttribute('title')))b.setAttribute('aria-label',b.closest('form')?'Submit form':'Action button');}
+  if(selected.links){for(const a of [...doc.querySelectorAll('a[href]')])if(/^(click here|read more|more|here|learn more)$/i.test(cleanText(a.textContent))&&!a.getAttribute('aria-label')){const href=a.getAttribute('href')||'';let label='Open related information';if(href.startsWith('#')){const target=doc.querySelector(href);if(target&&target.id)label='View '+target.id.replace(/[-_]/g,' ');else label='View page section';}else{try{const last=new URL(href,'https://example.invalid').pathname.split('/').filter(Boolean).pop().replace(/[-_]/g,' ').replace(/\.[a-z0-9]+$/i,'');label=/^learn$/i.test(last)?'Explore learning resources':/^recipes?$/i.test(last)?'Browse recipes':last?'Explore '+last:'Open related information';}catch(e){}}a.textContent=label;}}
+  if(selected.rel){for(const a of [...doc.querySelectorAll('a[target="_blank"],area[target="_blank"]')]){const rel=new Set((a.getAttribute('rel')||'').split(/\s+/).filter(Boolean));rel.add('noopener');rel.add('noreferrer');a.setAttribute('rel',[...rel].join(' '));}}
+  let out='<!DOCTYPE html>\n'+doc.documentElement.outerHTML;
+  return out;
+}
+const FIXES=[
+ {key:'lang',title:'Declare the document language',description:'Add lang="en" to the <html> element when no language is specified.',risk:'Low risk',defaults:true},
+ {key:'title',title:'Add a descriptive page title',description:'Use the entered title, or derive a placeholder from the first heading. Review the wording before publishing.',risk:'Review wording',defaults:true},
+ {key:'description',title:'Add a meta description',description:'Use the entered summary, or draft a short summary from visible page text.',risk:'Review wording',defaults:true},
+ {key:'viewport',title:'Add a responsive viewport tag',description:'Add width=device-width and an initial scale for common mobile layouts.',risk:'Low risk',defaults:true},
+ {key:'headings',title:'Repair the heading hierarchy',description:'Promote the first heading to H1 if needed, then reduce skipped levels and secondary H1s.',risk:'Review structure',defaults:true},
+ {key:'formLabels',title:'Name unlabeled form controls',description:'Add an aria-label based on an existing placeholder or field name.',risk:'Review wording',defaults:true},
+ {key:'buttonNames',title:'Name icon-only buttons',description:'Add a clear aria-label to buttons that have no accessible name.',risk:'Review wording',defaults:true},
+ {key:'links',title:'Improve generic link labels',description:'Replace common generic labels with suggested text derived from the local anchor target or destination.',risk:'Review wording',defaults:true},
+ {key:'rel',title:'Harden links that open a new tab',description:'Add noopener noreferrer to target="_blank" links.',risk:'Low risk',defaults:true}
+];
+function populateFixes(report){
+  const applicable=new Set(report.issues.map(i=>i.fixKey).filter(Boolean));
+  const list=$('fixesList');
+  const srcDoc=new DOMParser().parseFromString(report.html,'text/html');
+  const firstHeading=cleanText(srcDoc.querySelector('h1,h2,h3,h4,h5,h6')?.textContent);
+  const proposedTitle=(firstHeading||'Website Overview').slice(0,58)+' | Website';
+  const descEl=srcDoc.querySelector('meta[name="description"]');
+  const existingDesc=cleanText(descEl?.getAttribute('content'));
+  const descNeedsWork=!existingDesc||existingDesc.length<70||existingDesc.length>170;
+  const visible=cleanText(srcDoc.body?.textContent);
+  let proposedDesc=visible.slice(0,150).replace(/[.,;:!?\s]+$/,'');
+  if(proposedDesc.length<70)proposedDesc=(proposedDesc+' — Learn more about this website, its information and available resources.').slice(0,155);
+  list.innerHTML=FIXES.map(f=>{
+    const relevant=applicable.has(f.key);
+    const checked=relevant&&f.defaults;
+    const state=relevant?`<input type="checkbox" data-fix="${f.key}" ${checked?'checked':''} aria-label="Select ${esc(f.title)}">`:`<input type="checkbox" disabled aria-label="No issue for ${esc(f.title)}">`;
+    const label=relevant?'Applicable':'Not needed';
+    return `<label class="fixrow">${state}<span style="flex:1"><strong>${esc(f.title)}</strong><p>${esc(f.description)}</p></span><span class="manual">${label}</span></label>`;
+  }).join('');
+  $('applyFixesBtn').disabled=applicable.size===0;$('resetFixesBtn').disabled=applicable.size===0;$('downloadHtmlBtn').disabled=!afterHTML;
+  if(!report.title){$('fixesList').insertAdjacentHTML('afterbegin',`<div class="fieldnote" style="margin:0 0 8px">Suggested title <input id="titleValue" style="width:100%;margin-top:4px;border:1px solid var(--line);border-radius:7px;padding:8px" value="${esc(proposedTitle)}" aria-label="Suggested page title"></div>`);}
+  if(descNeedsWork){$('fixesList').insertAdjacentHTML('afterbegin',`<div class="fieldnote" style="margin:0 0 8px">Suggested meta description <textarea id="descriptionValue" rows="2" style="width:100%;margin-top:4px;border:1px solid var(--line);border-radius:7px;padding:8px" aria-label="Suggested meta description">${esc(proposedDesc)}</textarea></div>`);}
+}
+function renderReport(report,which='before'){
+  $('score').textContent=report.score;$('scorebar').style.width=report.score+'%';$('scorebar').style.background=report.score<50?'var(--red)':report.score<75?'var(--amber)':'var(--green)';
+  $('highCount').textContent=report.counts.high;$('medCount').textContent=report.counts.medium;$('passCount').textContent=report.counts.pass;
+  const n=report.issues.length;$('auditMeta').textContent=report.checks.length+' rules evaluated';
+  $('auditTag').textContent=report.score>=80?'Good baseline':report.score>=55?'Needs improvement':'Action needed';$('auditTag').style.background=report.score>=80?'var(--green2)':report.score>=55?'var(--amber2)':'var(--red2)';$('auditTag').style.color=report.score>=80?'var(--green)':report.score>=55?'var(--amber)':'var(--red)';
+  $('summaryLine').textContent=n?`${n} issue${n===1?'':'s'} detected across ${report.categories.length} area${report.categories.length===1?'':'s'}. Start with high-severity issues and review the suggested fixes.`:'No issues detected by the implemented checks. This is not a guarantee of full accessibility or SEO compliance.';
+  renderIssues(report);renderAllChecks(report);
+  $('exportAuditBtn').disabled=false;$('reportJsonBtn').disabled=false;
+}
+function renderIssues(report){
+  const issues=activeFilter==='all'?report.issues:report.issues.filter(i=>i.severity===activeFilter);
+  $('issues').innerHTML=issues.length?issues.map(i=>`<article class="issue ${i.severity}"><div class="issueicon">${i.severity==='high'?'!':i.severity==='medium'?'△':'i'}</div><div><h3>${esc(i.title)}</h3><p>${esc(i.detail)}</p><span class="smalltag">${esc(i.category)}</span>${i.manual?'<div class="suggestion"><strong>Manual review:</strong> automated changes may misrepresent page meaning; validate this item in context.</div>':i.fixKey?'<div class="suggestion"><strong>Suggested action:</strong> '+esc(FIXES.find(f=>f.key===i.fixKey)?.description||'Review and correct the source.')+'</div>':''}</div><span class="severity ${i.severity}">${i.severity}</span></article>`).join(''):'<div class="empty">No issues in this filter.</div>';
+}
+function renderAllChecks(report){$('allChecks').innerHTML=report.checks.map(c=>`<tr><td><span class="pill ${c.pass?'pass':'fail'}">${c.pass?'PASS':'REVIEW'}</span></td><td><strong>${esc(c.title)}</strong><div style="color:var(--muted);font-size:9px;margin-top:3px">${esc(c.category)}</div></td><td>${esc(c.detail)}</td></tr>`).join('');}
+function analyzeCurrent(markup=currentHTML){
+  currentHTML=String(markup||'').trim();
+  if(!currentHTML){notify('Source checks could not run for this website.');return false;}
+  currentReport=analyzeHTML(currentHTML);afterHTML='';afterReport=null;renderReport(currentReport);populateFixes(currentReport);
+  $('afterReport').classList.add('hidden');$('downloadHtmlBtn').disabled=true;
+  switchTab('findings');
+  return true;
+}
+function switchTab(tab){document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));['findings','fixes','checks'].forEach(t=>$('pane-'+t).classList.toggle('hidden',t!==tab));}
+function applyFixes(){
+  if(!currentReport)return;
+  const selected={};document.querySelectorAll('#fixesList input[type="checkbox"][data-fix]').forEach(c=>selected[c.dataset.fix]=c.checked);
+  const values={title:$('titleValue')?.value||'',description:$('descriptionValue')?.value||''};
+  afterHTML=applyTransforms(currentHTML,selected,values);afterReport=analyzeHTML(afterHTML);
+  $('beforePreview').textContent=currentHTML;$('afterPreview').textContent=afterHTML;
+  $('beforeScore').textContent=currentReport.score;$('afterScore').textContent=afterReport.score;
+  const beforeKeys=new Set(currentReport.issues.map(i=>i.key)),afterKeys=new Set(afterReport.issues.map(i=>i.key));
+  $('resolvedCount').textContent=[...beforeKeys].filter(k=>!afterKeys.has(k)).length;$('remainingCount').textContent=afterReport.issues.length;
+  $('afterReport').classList.remove('hidden');$('downloadHtmlBtn').disabled=false;
+  $('beforeTag').textContent=currentReport.issues.length+' issues';
+  notify('Preview created. '+[...beforeKeys].filter(k=>!afterKeys.has(k)).length+' check category(s) improved.');
+}
+function resetFixes(){if(!currentReport)return;afterHTML='';afterReport=null;populateFixes(currentReport);$('afterReport').classList.add('hidden');$('downloadHtmlBtn').disabled=true;notify('Fix selections reset.');}
+function download(name,content,type){const u=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1200);}
+function exportCSV(){if(!currentReport)return;const rows=[['Check','Category','Severity','Status','Details'],...currentReport.checks.map(c=>[c.title,c.category,c.severity,c.pass?'PASS':'REVIEW',c.detail])];const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';download('website-quality-audit.csv',rows.map(r=>r.map(q).join(',')).join('\r\n'),'text/csv;charset=utf-8');}
+function exportJSON(){if(!currentReport)return;download('website-quality-audit.json',JSON.stringify({generatedAt:new Date().toISOString(),sourceType:'public website page source',score:currentReport.score,counts:currentReport.counts,checks:currentReport.checks,issues:currentReport.issues},null,2),'application/json');}
+
+let lastAuditedUrl='';
+function safePublicUrl(value){
+  let u;try{u=new URL(value.trim());}catch(e){throw new Error('Enter a complete URL, including https://.');}
+  if(!['http:','https:'].includes(u.protocol))throw new Error('Only HTTP and HTTPS website URLs are supported.');
+  if(u.username||u.password)throw new Error('URLs containing usernames or passwords are not accepted.');
+  const h=u.hostname.toLowerCase().replace(/^\[|\]$/g,'');
+  if(h==='localhost'||h.endsWith('.localhost')||h.endsWith('.local')||h==='0.0.0.0'||h==='::1'||h.startsWith('fc')||h.startsWith('fd')||h.startsWith('fe80:'))throw new Error('Private/local network addresses are not supported. Use a public website.');
+  const m=h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if(m){const a=m.slice(1).map(Number);if(a.some(n=>n>255)||a[0]===10||a[0]===127||a[0]===0||a[0]===169&&a[1]===254||a[0]===172&&a[1]>=16&&a[1]<=31||a[0]===192&&a[1]===168||a[0]>=224)throw new Error('Private or reserved IP addresses are not supported.');}
+  u.hash='';return u.href;
+}
+function setUrlStatus(msg,type=''){const e=$('urlStatus');e.textContent=msg;e.className='urlstatus show'+(type?' '+type:'');}
+function scoreClass(v){if(v===null||v===undefined)return '';return v>=.9?'good':v>=.5?'warn':'bad';}
+function metricDisplay(v){return v===null||v===undefined?'N/A':String(Math.round(v*100));}
+function getAudit(lr,id){return lr?.audits?.[id]||null;}
+async function fetchWithTimeout(url,ms=65000){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),ms);try{return await fetch(url,{signal:controller.signal,credentials:'omit',cache:'no-store',redirect:'follow'});}finally{clearTimeout(timer);}}
+async function runPageSpeed(url){
+  const api=new URL('https://www.googleapis.com/pagespeedonline/v5/runPagespeed');api.searchParams.set('url',url);api.searchParams.set('strategy','mobile');
+  ['PERFORMANCE','ACCESSIBILITY','BEST_PRACTICES','SEO'].forEach(c=>api.searchParams.append('category',c));
+  const r=await fetchWithTimeout(api.href,80000);let data;try{data=await r.json();}catch(e){throw new Error('Google PageSpeed returned an unreadable response.');}
+  if(!r.ok||data.error)throw new Error(data?.error?.message||('PageSpeed API request failed (HTTP '+r.status+'). The service may be busy or rate-limited.'));
+  if(!data.lighthouseResult)throw new Error('Google PageSpeed returned no Lighthouse report for this URL.');return data;
+}
+async function fetchPageHTML(url){
+  const tries=[
+    'https://cors.tools/proxy?url='+encodeURIComponent(url),
+    'https://api.allorigins.win/raw?url='+encodeURIComponent(url)
+  ];let last='The page source could not be retrieved by the public HTML relay.';
+  for(const proxy of tries){try{
+    const r=await fetchWithTimeout(proxy,22000);if(!r.ok)throw new Error('Relay returned HTTP '+r.status+'.');
+    const body=await r.text();if(!body||body.length<30)throw new Error('The retrieved response was empty.');
+    if(body.length>3500000)throw new Error('The retrieved page is larger than the 3.5 MB source limit.');
+    if(!/<html[\s>]|<!doctype\s+html/i.test(body))throw new Error('The target did not return recognisable HTML (it may be blocked or not a webpage).');
+    if(/<title>[^<]*(error|access denied|too many requests)/i.test(body.slice(0,20000))&&body.length<12000)throw new Error('The website returned an error or access-denied page.');
+    return body;
+  }catch(e){last=e.name==='AbortError'?'The HTML relay timed out.':(e.message||last);}}
+  throw new Error(last);
+}
+function renderPageSpeed(data,url){
+  const lr=data.lighthouseResult;const cats=lr.categories||{};const pairs=[['Performance',cats.performance?.score],['Accessibility',cats.accessibility?.score],['Best practices',cats['best-practices']?.score],['SEO',cats.seo?.score]];
+  $('liveScores').innerHTML=pairs.map(([name,val])=>`<div class="livescore ${scoreClass(val)}"><label>${esc(name)}</label><strong>${metricDisplay(val)}</strong><small>${val==null?'No score returned':val>=.9?'Good':val>=.5?'Needs improvement':'Poor'} · /100</small></div>`).join('');
+  const vitals=[['First Contentful Paint','first-contentful-paint'],['Largest Contentful Paint','largest-contentful-paint'],['Total Blocking Time','total-blocking-time'],['Cumulative Layout Shift','cumulative-layout-shift'],['Speed Index','speed-index'],['Time to Interactive','interactive']];
+  $('liveVitals').innerHTML=vitals.map(([label,id])=>{const a=getAudit(lr,id);return `<div class="livevital"><span>${esc(label)}</span><strong>${esc(a?.displayValue||'N/A')}</strong></div>`;}).join('');
+  const audits=Object.values(lr.audits||{}).filter(a=>a&&typeof a.score==='number'&&a.score<.9&&a.score>=0&&!['notApplicable','manual'].includes(a.scoreDisplayMode)&&a.title&&a.id!=='uses-rel-preload').sort((a,b)=>a.score-b.score);
+  const selected=audits.slice(0,8);
+  $('liveFindings').innerHTML=selected.length?selected.map(a=>`<article class="livefinding"><strong>${esc(a.title)} <span style="color:var(--muted);font-weight:650">(${Math.round(a.score*100)}/100)</span></strong><p>${esc((a.description||'Review this Lighthouse finding.').replace(/\s+/g,' ').slice(0,540))}${a.displayValue?' · '+esc(a.displayValue):''}</p></article>`).join(''):'<div class="empty">No scored Lighthouse audits below 90/100 were returned, or the report contains only manual checks.</div>';
+  $('liveMeta').textContent='Google Lighthouse mobile lab report for '+url+' · '+(lr.fetchTime?new Date(lr.fetchTime).toLocaleString():'completed just now');
+  $('liveTag').textContent='Lighthouse mobile';$('openPageSpeedBtn').disabled=false;$('openTargetBtn').disabled=false;
+  $('openPageSpeedBtn').onclick=()=>window.open('https://pagespeed.web.dev/analysis?url='+encodeURIComponent(url),'_blank','noopener');
+  $('openTargetBtn').onclick=()=>window.open(url,'_blank','noopener');
+}
+async function auditWebsiteUrl(){
+  const btn=$('auditUrlBtn');if(btn.disabled)return;
+  let url;try{url=safePublicUrl($('websiteUrl').value);}catch(e){setUrlStatus(e.message,'error');return;}
+  btn.disabled=true;btn.textContent='Auditing…';$('livePanel').classList.remove('hidden');$('liveMeta').textContent='Scanning '+url;$('liveTag').textContent='In progress';$('liveScores').innerHTML='<div class="empty" style="grid-column:1/-1">Running Google Lighthouse on mobile… This can take up to a minute.</div>';$('liveVitals').innerHTML='';$('liveFindings').innerHTML='<div class="empty">Collecting live audit results…</div>';$('liveSourceNote').textContent='Checking available page details alongside the mobile Lighthouse audit.';setUrlStatus('Audit started. Mobile Lighthouse and additional quality checks are running.','');
+  lastAuditedUrl=url;
+  const psiPromise=runPageSpeed(url).then(data=>{
+    renderPageSpeed(data,url);
+    setUrlStatus('Google Lighthouse results arrived; source inspection may still be running.','');
+    return {status:'fulfilled',value:data};
+  }).catch(err=>{
+    $('liveMeta').textContent='PageSpeed audit could not be completed for '+url;$('liveTag').textContent='PageSpeed unavailable';$('liveScores').innerHTML='<div class="note" style="grid-column:1/-1">'+esc(err?.message||'Google PageSpeed request failed.')+'</div>';$('liveVitals').innerHTML='';$('liveFindings').innerHTML='<div class="empty">No Lighthouse results were available for this attempt.</div>';$('openPageSpeedBtn').disabled=false;$('openPageSpeedBtn').onclick=()=>window.open('https://pagespeed.web.dev/analysis?url='+encodeURIComponent(url),'_blank','noopener');$('openTargetBtn').disabled=false;$('openTargetBtn').onclick=()=>window.open(url,'_blank','noopener');
+    return {status:'rejected',reason:err};
+  });
+  const sourcePromise=fetchPageHTML(url).then(markup=>{
+    activeFilter='all';document.querySelectorAll('.filter').forEach(f=>f.classList.toggle('active',f.dataset.filter==='all'));
+    analyzeCurrent(markup);$('auditMeta').textContent=currentReport?currentReport.checks.length+' rules evaluated':'13 rules evaluated';
+    $('liveSourceNote').textContent='Additional quality checks were run against the retrieved page source. JavaScript interactions, external assets and authenticated areas may not be fully represented.';
+    return {status:'fulfilled',value:markup};
+  }).catch(err=>{
+    $('liveSourceNote').textContent='Additional page checks were unavailable for this site: '+(err?.message||'the page source could not be retrieved')+'. The mobile Lighthouse report may still be available.';
+    return {status:'rejected',reason:err};
+  });
+  const [psi,source]=await Promise.all([psiPromise,sourcePromise]);
+  if(psi.status==='fulfilled'&&source.status==='fulfilled')setUrlStatus('Mobile Lighthouse and additional page quality checks are complete.','ok');
+  else if(psi.status==='fulfilled')setUrlStatus('Lighthouse completed; the website blocked or could not be fetched for source-level checks. Metrics are available above.','ok');
+  else if(source.status==='fulfilled')setUrlStatus('Additional page checks completed, but the mobile Lighthouse report was unavailable. Review Audit Results below.','ok');
+  else setUrlStatus('The audit services could not complete for this URL. Try a different public website or use the official report link.','error');
+  btn.disabled=false;btn.textContent='Audit URL';
+}
+$('auditUrlBtn').addEventListener('click',auditWebsiteUrl);
+$('websiteUrl').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();auditWebsiteUrl();}});
+$('clearUrlBtn').addEventListener('click',()=>{$('websiteUrl').value='';$('urlStatus').className='urlstatus';$('urlStatus').textContent='';});
+
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
+document.querySelectorAll('.filter').forEach(f=>f.addEventListener('click',()=>{activeFilter=f.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===f));if(currentReport)renderIssues(currentReport);}));
+$('applyFixesBtn').addEventListener('click',applyFixes);$('resetFixesBtn').addEventListener('click',resetFixes);$('downloadHtmlBtn').addEventListener('click',()=>{if(afterHTML)download('website-quality-inspector-repaired.html',afterHTML,'text/html;charset=utf-8')});$('exportAuditBtn').addEventListener('click',exportCSV);$('reportJsonBtn').addEventListener('click',exportJSON);
+// The initial report stays empty until a public website URL is audited.
+</script>
+</body>
+</html>
